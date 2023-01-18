@@ -21,5 +21,5 @@ class Book(models.Model):
             f" {self.Author}"
             f" {self.Cover}"
             f" {self.Inventory}"
-            f" {self.Daily_fee}"
+            f" {self.Daily_fee}$"
         )
