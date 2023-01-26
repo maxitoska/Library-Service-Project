@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("borrowings_service", "0001_initial"),
+        ("borrowings", "0001_initial"),
     ]
 
     operations = [

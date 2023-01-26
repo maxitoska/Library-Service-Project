@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PaymentServiceConfig(AppConfig):
+class BooksServiceConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "payment_service"
+    name = "books"

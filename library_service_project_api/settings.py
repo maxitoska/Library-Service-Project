@@ -38,9 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "books_service",
-    "borrowings_service",
-    "payment_service",
+    "books",
+    "borrowings",
+    "payment",
     "user",
     "rest_framework",
     "rest_framework_simplejwt",
@@ -137,6 +137,7 @@ REST_FRAMEWORK = {
     #     "rest_framework.throttling.AnonRateThrottle",
     #     "rest_framework.throttling.UserRateThrottle"
     # ],
+    "DATE_INPUT_FORMATS": ["%Y-%m-%d"],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "30/minute",
         "user": "100/minute"
