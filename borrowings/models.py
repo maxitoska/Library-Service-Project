@@ -10,13 +10,18 @@ class Borrowing(models.Model):
         HARD = "HARD"
         SOFT = "SOFT"
 
+    is_active = models.BooleanField(default=False)
     borrow_date = models.DateField()
     expected_return_date = models.DateField()
     actual_return_date = models.DateField(auto_now_add=True)
     book_id = models.ForeignKey(
         Book, on_delete=models.CASCADE, related_name="borrowings"
     )
-    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="borrowings"
+    )
 
     class Meta:
         ordering = ("borrow_date",)
@@ -28,4 +33,5 @@ class Borrowing(models.Model):
             f" {self.actual_return_date}"
             f" {self.book_id}"
             f" {self.user_id}"
+            f" {self.is_active}"
         )

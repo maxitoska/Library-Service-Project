@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from books.permissions import IsAdminOrIfAuthenticatedReadOnly
@@ -10,6 +11,8 @@ from borrowings.serializers import (
     BorrowingListSerializer,
     BorrowingReturnSerializer,
 )
+from user.models import User
+from user.serializers import UserSerializer
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
@@ -38,11 +41,14 @@ class BorrowingReturnView(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action == "partial_update":
             return BorrowingReturnSerializer
-        # if self.action == "retrieve":
-        #     return BorrowingReturnSerializer
 
         return BorrowingSerializer
 
+
+class UserAdminsViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.filter(borrowings__is_active=True).select_related("is_active")
+    serializer_class = UserSerializer
+    permission_classes = (IsAdminUser,)
 

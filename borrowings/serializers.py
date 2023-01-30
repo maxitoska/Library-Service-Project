@@ -9,7 +9,6 @@ from user.serializers import UserSerializer
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
-    is_active = serializers.BooleanField(default=False)
     user_id = serializers.IntegerField()
 
     class Meta:
@@ -33,8 +32,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = Book.objects.get(validated_data["book_id"])
         book.inventory -= 1
-        self.is_active = True
-        self.user_id = book.id  # not sure
+        validated_data.is_active = True
+        self.user_id.id = validated_data["user_id"]  # not sure
         with transaction.atomic():
             book.save()
             instance = super().create(validated_data)
@@ -50,7 +49,6 @@ class BorrowingListSerializer(BorrowingSerializer):
             "expected_return_date",
             "actual_return_date",
             "book_id",
-
         )
 
 
@@ -66,7 +64,6 @@ class BorrowingDetailSerializer(BorrowingSerializer):
             "expected_return_date",
             "actual_return_date",
             "book_id",
-
         )
 
 
@@ -91,9 +88,10 @@ class BorrowingReturnSerializer(BorrowingSerializer):
     def create(self, validated_data):
         book = Book.objects.get(validated_data["book_id"])
         book.inventory += 1
-        self.is_active = False
+        validated_data.is_active = False
         self.user_id = id  # not sure
         with transaction.atomic():
             book.save()
+            self.save()
             instance = super().create(validated_data)
         return instance
