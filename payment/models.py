@@ -12,22 +12,22 @@ class Payment(models.Model):
         PAYMENT = "PAYMENT",
         FINE = "FINE"
 
-    Status = models.CharField(max_length=50, choices=StatusChoices.choices)
-    Type = models.CharField(max_length=50, choices=TypeChoices.choices)
-    Borrowing_id = models.ForeignKey(Borrowing, on_delete=models.CASCADE)
-    Session_url = models.URLField(max_length=255)
-    Session_id = models.CharField(max_length=50)
-    Money_to_pay = models.DecimalField(max_digits=19, decimal_places=4)
+    status = models.CharField(max_length=50, choices=StatusChoices.choices)
+    type = models.CharField(max_length=50, choices=TypeChoices.choices)
+    borrowing_id = models.ForeignKey(Borrowing, on_delete=models.CASCADE)
+    session_url = models.URLField(max_length=255)
+    session_id = models.CharField(max_length=50)
+    money_to_pay = models.DecimalField(max_digits=19, decimal_places=4)
 
     class Meta:
-        ordering = ("Status",)
+        ordering = ("status",)
 
     def __str__(self):
         return (
-            f"{self.Status}"
-            f" {self.Type}"
-            f" {self.Borrowing_id}"
-            f" {self.Session_url}"
-            f" {self.Session_id}"
-            f" {self.Money_to_pay}"
+            f"{self.status}"
+            f" {self.type}"
+            f" {self.borrowing_id}"
+            f" {self.session_url}"
+            f" {self.session_id}"
+            f" {self.money_to_pay}"
         )

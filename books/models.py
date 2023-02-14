@@ -6,20 +6,20 @@ class Book(models.Model):
         HARD = "HARD"
         SOFT = "SOFT"
 
-    Title = models.CharField(max_length=255)
-    Author = models.CharField(max_length=255)
-    Cover = models.CharField(max_length=50, choices=CoverChoices.choices)
-    Inventory = models.PositiveIntegerField()
-    Daily_fee = models.DecimalField(max_digits=19, decimal_places=4)
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    cover = models.CharField(max_length=50, choices=CoverChoices.choices)
+    inventory = models.PositiveIntegerField()
+    daily_fee = models.DecimalField(max_digits=19, decimal_places=4)
 
     class Meta:
-        ordering = ("Title",)
+        ordering = ("title",)
 
     def __str__(self):
         return (
-            f"{self.Title}"
-            f" {self.Author}"
-            f" {self.Cover}"
-            f" {self.Inventory}"
-            f" {self.Daily_fee}$"
+            f"{self.title}"
+            f" {self.author}"
+            f" {self.cover}"
+            f" {self.inventory}"
+            f" {self.daily_fee}$"
         )

@@ -6,18 +6,13 @@ from user.models import User
 
 
 class Borrowing(models.Model):
-    class CoverChoices(models.TextChoices):
-        HARD = "HARD"
-        SOFT = "SOFT"
-
-    is_active = models.BooleanField(default=False)
-    borrow_date = models.DateField()
+    borrow_date = models.DateField(auto_now_add=True)
     expected_return_date = models.DateField()
-    actual_return_date = models.DateField(auto_now_add=True)
-    book_id = models.ForeignKey(
+    actual_return_date = models.DateField(blank=True, null=True)
+    book = models.ForeignKey(
         Book, on_delete=models.CASCADE, related_name="borrowings"
     )
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="borrowings"
@@ -31,7 +26,6 @@ class Borrowing(models.Model):
             f"{self.borrow_date}"
             f" {self.expected_return_date}"
             f" {self.actual_return_date}"
-            f" {self.book_id}"
-            f" {self.user_id}"
-            f" {self.is_active}"
+            f" {self.book}"
+            f" {self.user}"
         )

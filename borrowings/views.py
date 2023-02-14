@@ -7,9 +7,11 @@ from books.permissions import IsAdminOrIfAuthenticatedReadOnly
 from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingSerializer,
-    BorrowingDetailSerializer,
+    BorrowingCreateSerializer,
     BorrowingListSerializer,
+    BorrowingDetailSerializer,
     BorrowingReturnSerializer,
+
 )
 from user.models import User
 from user.serializers import UserSerializer
@@ -31,24 +33,26 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return BorrowingListSerializer
         if self.action == "retrieve":
             return BorrowingDetailSerializer
+        if self.action == "create":
+            return BorrowingCreateSerializer
 
         return BorrowingSerializer
 
 
-class BorrowingReturnView(viewsets.ModelViewSet):
+class BorrowingReturnViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingReturnSerializer
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
-    def get_serializer_class(self):
-        if self.action == "partial_update":
-            return BorrowingReturnSerializer
+    # def get_serializer_class(self):
+    #     if self.action == "partial_update":
+    #         return BorrowingReturnSerializer
+    #
+    #     return BorrowingSerializer
 
-        return BorrowingSerializer
 
-
-class UserAdminsViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.filter(borrowings__is_active=True).select_related("is_active")
-    serializer_class = UserSerializer
-    permission_classes = (IsAdminUser,)
+# class UserAdminsViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.filter(borrowings__is_active=True).select_related("borrowings")
+#     serializer_class = UserSerializer
+#     permission_classes = (IsAdminUser,)
 
