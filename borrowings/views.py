@@ -39,10 +39,3 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.update(instance, request.data)
         return Response(BorrowingSerializer(instance).data, status=status.HTTP_200_OK)
-
-
-
-# class UserAdminsViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.filter(borrowings__is_active=True).select_related("borrowings")
-#     serializer_class = UserSerializer
-#     permission_classes = (IsAdminUser,)
