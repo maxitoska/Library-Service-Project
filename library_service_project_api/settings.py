@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_filters",
     "books",
     "borrowings",
     "payment",
@@ -137,6 +138,9 @@ REST_FRAMEWORK = {
     #     "rest_framework.throttling.AnonRateThrottle",
     #     "rest_framework.throttling.UserRateThrottle"
     # ],
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ),
     "DATE_INPUT_FORMATS": ["%Y-%m-%d"],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "30/minute",

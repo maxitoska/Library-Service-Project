@@ -21,11 +21,11 @@ class Borrowing(models.Model):
     class Meta:
         ordering = ("borrow_date",)
 
-    def str(self):
+    def __str__(self):
         return (
             f"{self.borrow_date}"
             f" {self.expected_return_date}"
             f" {self.actual_return_date}"
-            f" {self.book}"
-            f" {self.user}"
+            f"{self.book}"
+            f"{self.user}"
         )
