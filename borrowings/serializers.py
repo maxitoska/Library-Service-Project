@@ -1,7 +1,8 @@
 from datetime import date
 
 from django.db import transaction
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 
 from books.serializers import BookSerializer
 from borrowings.models import Borrowing
@@ -95,10 +96,12 @@ class BorrowingReturnSerializer(serializers.Serializer):
         )
 
     def update(self, instance, validated_data):
-        book = instance.book
-        book.inventory += 1
-        instance.actual_return_date = date.today()
-        with transaction.atomic():
-            book.save()
-            instance.save()
-        return instance
+        if instance.actual_return_date is None:
+            book = instance.book
+            book.inventory += 1
+            instance.actual_return_date = date.today()
+            with transaction.atomic():
+                book.save()
+                instance.save()
+            return instance
+        raise serializers.ValidationError("You cannot return borrowing twice")
