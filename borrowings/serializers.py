@@ -2,9 +2,7 @@ from datetime import date
 
 from django.db import transaction
 from rest_framework import serializers
-from rest_framework.templatetags.rest_framework import data
 
-from books.models import Book
 from books.serializers import BookSerializer
 from borrowings.models import Borrowing
 from user.serializers import UserSerializer
@@ -77,8 +75,6 @@ class BorrowingCreateSerializer(BorrowingSerializer):
     def create(self, validated_data):
         book = validated_data["book"]
         book.inventory -= 1
-        # validated_data.is_active = True
-        # self.user_id.id = validated_data["user.id"]  # not sure
         with transaction.atomic():
             book.save()
 
@@ -101,9 +97,7 @@ class BorrowingReturnSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         book = instance.book
         book.inventory += 1
-        # validated_data.self.is_active = False
         instance.actual_return_date = date.today()
-        # self.user_id.id = validated_data["user.id"]
         with transaction.atomic():
             book.save()
             instance.save()
