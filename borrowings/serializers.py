@@ -78,19 +78,21 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             raise serializers.ValidationError("Inventory is empty, choose another book")
         return attrs
 
-    def expected_money_to_pay(self, attrs) -> int:
+    def expected_money_to_pay(self, attrs) -> Any:
         book = attrs["book"]
         if date.today().month == attrs["expected_return_date"].month:
-            return attrs["expected_return_date"].day - date.today().day * book.daily_fee
+            return (attrs["expected_return_date"].day - date.today().day) * book.daily_fee
 
     def telegram_notification(self, attrs) -> None:
         money_to_pay = self.expected_money_to_pay(attrs)
-        message = f"New Borrowing was created. Detail Information:\n" \
-                  f"today date: {date.today()}\n" \
-                  f"expected return date: {attrs['expected_return_date']}\n" \
-                  f"book info: {attrs['book']}\n" \
-                  f"expected money to pay: {money_to_pay}$\n" \
-                  f"User email: {attrs['user']}"
+        message = (
+            f"New Borrowing was created. Detail Information:\n"
+            f"today date: {date.today()}\n"
+            f"expected return date: {attrs['expected_return_date']}\n"
+            f"book info: {attrs['book']}\n"
+            f"expected money to pay: {money_to_pay}$\n"
+            f"User email: {attrs['user']}"
+        )
 
         url = f"https://api.telegram.org/bot{self.TOKEN}/sendMessage?chat_id={self.chat_id}&text={message}"
         requests.get(url).json()  # this sends the message
