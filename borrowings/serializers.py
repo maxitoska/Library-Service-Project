@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Any
 
 import requests
 from django.db import transaction
@@ -71,18 +72,18 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             "user",
         )
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> bool:
         book = attrs["book"]
         if not book.inventory:
             raise serializers.ValidationError("Inventory is empty, choose another book")
         return attrs
 
-    def expected_money_to_pay(self, attrs):
+    def expected_money_to_pay(self, attrs) -> int:
         book = attrs["book"]
         if date.today().month == attrs["expected_return_date"].month:
             return attrs["expected_return_date"].day - date.today().day * book.daily_fee
 
-    def telegram_notification(self, attrs):
+    def telegram_notification(self, attrs) -> None:
         money_to_pay = self.expected_money_to_pay(attrs)
         message = f"New Borrowing was created. Detail Information:\n" \
                   f"today date: {date.today()}\n" \
@@ -94,7 +95,7 @@ class BorrowingCreateSerializer(BorrowingSerializer):
         url = f"https://api.telegram.org/bot{self.TOKEN}/sendMessage?chat_id={self.chat_id}&text={message}"
         requests.get(url).json()  # this sends the message
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Any:
         book = validated_data["book"]
         book.inventory -= 1
         with transaction.atomic():
@@ -117,7 +118,7 @@ class BorrowingReturnSerializer(serializers.Serializer):
             "is_active"
         )
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> Any:
         if instance.actual_return_date is None:
             book = instance.book
             book.inventory += 1
