@@ -2,10 +2,10 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from payment.views import PaymentViewSet
+from borrowings.views import BorrowingViewSet
 
 router = routers.DefaultRouter()
-router.register("payments", PaymentViewSet)
+router.register("borrowings", BorrowingViewSet)
 
 urlpatterns = [
 
@@ -13,4 +13,4 @@ urlpatterns = [
 
 ]
 
-app_name = "payment"
+app_name = "borrowings"
