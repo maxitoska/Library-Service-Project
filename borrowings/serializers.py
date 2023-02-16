@@ -78,13 +78,13 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             raise serializers.ValidationError("Inventory is empty, choose another book")
         return attrs
 
-    def expected_money_to_pay(self, attrs) -> Any:
-        book = attrs["book"]
-        if date.today().month == attrs["expected_return_date"].month:
-            return (attrs["expected_return_date"].day - date.today().day) * book.daily_fee
+    def expected_money_to_pay(self) -> Any:
+        book = self.validated_data["book"]
+        if date.today().month == self.validated_data["expected_return_date"].month:
+            return (self.validated_data["expected_return_date"].day - date.today().day) * book.daily_fee
 
     def telegram_notification(self, attrs) -> None:
-        money_to_pay = self.expected_money_to_pay(attrs)
+        money_to_pay = self.expected_money_to_pay()
         message = (
             f"New Borrowing was created. Detail Information:\n"
             f"today date: {date.today()}\n"
@@ -103,7 +103,6 @@ class BorrowingCreateSerializer(BorrowingSerializer):
         with transaction.atomic():
             book.save()
             instance = super().create(validated_data)
-            self.expected_money_to_pay(attrs=validated_data)
             self.telegram_notification(attrs=validated_data)
         return instance
 
@@ -121,12 +120,13 @@ class BorrowingReturnSerializer(serializers.Serializer):
         )
 
     def update(self, instance, validated_data) -> Any:
-        if instance.actual_return_date is None:
-            book = instance.book
-            book.inventory += 1
-            instance.actual_return_date = date.today()
-            with transaction.atomic():
-                book.save()
-                instance.save()
-            return instance
-        raise serializers.ValidationError("You cannot return borrowing twice")
+        if instance.actual_return_date is not None:
+            raise serializers.ValidationError("You cannot return borrowing twice")
+        book = instance.book
+        book.inventory += 1
+        instance.actual_return_date = date.today()
+        with transaction.atomic():
+            book.save()
+            instance.save()
+        return instance
+
