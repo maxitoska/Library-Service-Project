@@ -1,4 +1,6 @@
+from collections import OrderedDict
 from datetime import date
+from decimal import Decimal
 from typing import Any
 
 import requests
@@ -72,13 +74,13 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             "user",
         )
 
-    def validate(self, attrs) -> bool:
+    def validate(self, attrs: OrderedDict) -> OrderedDict:
         book = attrs["book"]
         if not book.inventory:
             raise serializers.ValidationError("Inventory is empty, choose another book")
         return attrs
 
-    def expected_money_to_pay(self) -> Any:
+    def expected_money_to_pay(self) -> Decimal:
         book = self.validated_data["book"]
         if date.today().month == self.validated_data["expected_return_date"].month:
             return (self.validated_data["expected_return_date"].day - date.today().day) * book.daily_fee
@@ -97,7 +99,8 @@ class BorrowingCreateSerializer(BorrowingSerializer):
         url = f"https://api.telegram.org/bot{self.TOKEN}/sendMessage?chat_id={self.chat_id}&text={message}"
         requests.get(url).json()  # this sends the message
 
-    def create(self, validated_data) -> Any:
+    def create(self, validated_data) -> Borrowing:
+
         book = validated_data["book"]
         book.inventory -= 1
         with transaction.atomic():
@@ -119,7 +122,7 @@ class BorrowingReturnSerializer(serializers.Serializer):
             "is_active"
         )
 
-    def update(self, instance, validated_data) -> Any:
+    def update(self, instance, validated_data) -> Borrowing:
         if instance.actual_return_date is not None:
             raise serializers.ValidationError("You cannot return borrowing twice")
         book = instance.book
@@ -129,4 +132,3 @@ class BorrowingReturnSerializer(serializers.Serializer):
             book.save()
             instance.save()
         return instance
-

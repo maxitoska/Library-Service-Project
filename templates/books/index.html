@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Service</title>
+  {% load static %}
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+{% block content %}
+  <h1><strong>Library Service Project</strong></h1>
+  <p><strong>Welcome to our Library</strong></p>
+  <p><strong><em>Choose your favourite book and borrow it</em></strong></p>
+  <br>
+  {% for book in books %}
+    <li>{{ book.author }}: {{ book.title }}</li>
+  {% endfor %}
+
+
+{% endblock %}
+</body>
+</html>
