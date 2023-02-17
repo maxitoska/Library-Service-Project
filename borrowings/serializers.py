@@ -8,6 +8,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from books.serializers import BookSerializer
+from borrowings.config import url_for_telegram_notification
 from borrowings.models import Borrowing
 from user.serializers import UserSerializer
 from library_service_project_api.settings import TOKEN, chat_id
@@ -60,8 +61,6 @@ class BorrowingDetailSerializer(BorrowingListSerializer):
 
 
 class BorrowingCreateSerializer(BorrowingSerializer):
-    TOKEN = TOKEN
-    chat_id = chat_id
 
     class Meta:
         model = Borrowing
@@ -96,13 +95,15 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             f"User email: {attrs['user']}"
         )
 
-        url = f"https://api.telegram.org/bot{self.TOKEN}/sendMessage?chat_id={self.chat_id}&text={message}"
+        url = url_for_telegram_notification(TOKEN, chat_id, message)
         requests.get(url).json()  # this sends the message
 
     def create(self, validated_data) -> Borrowing:
 
         book = validated_data["book"]
         book.inventory -= 1
+        if self.validated_data["expected_return_date"] < date.today():
+            raise serializers.ValidationError("Expected_return_date cannot be less than borrow_date")
         with transaction.atomic():
             book.save()
             instance = super().create(validated_data)
