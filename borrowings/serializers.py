@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from datetime import date
-from decimal import Decimal
 from typing import Any
 
 from django.db import transaction

@@ -37,10 +37,11 @@ class AnonBookViewTest(APITestCase):
 class AdminBookViewTest(APITestCase):
     def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
-            "test1@test.com", "testpass1", is_staff=True
+            "test1@test.com", "testpass1", is_staff=True, is_superuser=True
         )
         self.client.force_authenticate(self.user)
 
     def test_admin_post_request(self) -> None:
         response = self.client.post(BOOK_URL, data=DATA)
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
