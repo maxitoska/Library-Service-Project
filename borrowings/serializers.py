@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from datetime import date
 from decimal import Decimal
+from typing import Any
 
 from django.db import transaction
 from rest_framework import serializers
@@ -9,7 +10,7 @@ from books.serializers import BookSerializer
 from borrowings.config import telegram_notification_sender
 from borrowings.models import Borrowing
 from user.serializers import UserSerializer
-from library_service_project_api.settings import TOKEN, chat_id
+from library_service_project_api.settings import TOKEN, CHAT_ID
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -78,7 +79,7 @@ class BorrowingCreateSerializer(BorrowingSerializer):
 
         return attrs
 
-    def expected_money_to_pay(self) -> Decimal:
+    def expected_money_to_pay(self) -> Any:
         book = self.validated_data["book"]
 
         if date.today().month == self.validated_data["expected_return_date"].month:
@@ -97,7 +98,7 @@ class BorrowingCreateSerializer(BorrowingSerializer):
             f"User email: {attrs['user']}"
         )
 
-        telegram_notification_sender(TOKEN, chat_id, message)  # this sends the message
+        telegram_notification_sender(TOKEN, CHAT_ID, message)  # this sends the message
 
     def create(self, validated_data) -> Borrowing:
         print(validated_data)
