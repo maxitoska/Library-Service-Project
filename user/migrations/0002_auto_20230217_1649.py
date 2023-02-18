@@ -9,7 +9,7 @@ def generate_superuser(apps, schema_editor):
 
     superuser = get_user_model().objects.create_superuser(
         email="max@admin.com",
-        password=123,
+        password="123",
     )
     superuser.save()
 
