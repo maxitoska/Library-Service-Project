@@ -1,5 +1,5 @@
-from django_filters import rest_framework as filters, BaseInFilter, BooleanFilter
-
+from django_filters import rest_framework as filters
+from django_filters.filters import BaseInFilter, BooleanFilter
 from borrowings.models import Borrowing
 
 

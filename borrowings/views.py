@@ -40,4 +40,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(data=request.data)
         serializer.update(instance, request.data)
-        return Response(BorrowingSerializer(instance).data, status=status.HTTP_200_OK)
+        return Response(
+            BorrowingSerializer(instance).data,
+            status=status.HTTP_200_OK
+        )
