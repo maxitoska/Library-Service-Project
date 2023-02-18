@@ -16,13 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from books.views import index
-
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("", admin.site.urls),
     path("api/", include("books.urls", namespace="books")),
     path("api/", include("borrowings.urls", namespace="borrowings")),
     path("api/", include("payment.urls", namespace="payments")),
     path("api/user/", include("user.urls", namespace="user")),
-    path("", index, name="index"),
 ]

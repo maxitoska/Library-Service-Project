@@ -28,8 +28,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # Telegram TOKEN and chat_id
 TOKEN = os.getenv("TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
-DJANGO_SUPERUSER_EMAIL = os.getenv("DJANGO_SUPERUSER_EMAIL")
-DJANGO_SUPERUSER_PASSWORD = os.getenv("DJANGO_SUPERUSER_PASSWORD")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
