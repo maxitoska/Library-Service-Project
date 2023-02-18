@@ -3,9 +3,9 @@ from typing import Any
 from rest_framework import viewsets, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from borrowings.service import BorrowingFilter
-from books.permissions import IsAdminOrIfAuthenticatedReadOnly
 from borrowings.models import Borrowing
 from borrowings.serializers import (
     BorrowingSerializer,
@@ -13,14 +13,13 @@ from borrowings.serializers import (
     BorrowingListSerializer,
     BorrowingDetailSerializer,
     BorrowingReturnSerializer,
-
 )
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
+    permission_classes = IsAuthenticated,
     filter_backends = (DjangoFilterBackend,)
     filterset_class = BorrowingFilter
 
@@ -35,7 +34,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return BorrowingReturnSerializer
         return BorrowingSerializer
 
-    @action(detail=True, methods=['patch'], url_path="return")
+    @action(detail=True, methods=["patch"], url_path="return")
     def return_book(self, request, *args, **kwargs) -> Response:
         instance = self.get_object()
         serializer = self.get_serializer(data=request.data)

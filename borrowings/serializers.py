@@ -100,11 +100,13 @@ class BorrowingCreateSerializer(BorrowingSerializer):
         telegram_notification_sender(TOKEN, chat_id, message)  # this sends the message
 
     def create(self, validated_data) -> Borrowing:
-
+        print(validated_data)
         book = validated_data["book"]
         book.inventory -= 1
 
         if self.validated_data["expected_return_date"] < date.today():
+            print(date.today())
+            print(validated_data["expected_return_date"])
             raise serializers.ValidationError("Expected_return_date cannot be less than borrow_date")
 
         with transaction.atomic():

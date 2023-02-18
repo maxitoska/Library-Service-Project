@@ -20,4 +20,5 @@ class Book(models.Model):
             f"{self.title}"
             f" {self.author}"
             f" {self.cover}"
+            f" {self.inventory}"
         )
